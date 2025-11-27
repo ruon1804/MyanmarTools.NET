@@ -1,9 +1,0 @@
-{
-  "name": "myanmar-tools-demo",
-  "version": "1.0.0",
-  "description": "Sample for how to use myanmar-tools.",
-  "main": "index.js",
-  "dependencies": {
-    "myanmar-tools": "latest"
-  }
-}

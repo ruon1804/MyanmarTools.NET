@@ -1,3 +1,0 @@
-include LICENSE README.rst
-include src/myanmartools/resources/*
-include tests/*
