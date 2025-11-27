@@ -3,14 +3,19 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<Description>Myanmar Tools uses a machine learning model to give very accurate results when detecting Zawgyi versus Unicode. Detectors that use hand-coded rules for detection are susceptible to flagging content in other languages like Shan and Mon as Zawgyi when it is actually Unicode.</Description>
-		<Title>Myanmar Tools</Title>
+		<Title>Myanmar Tools for .NET</Title>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<RepositoryUrl>https://github.com/nihongocom/rakuvisa</RepositoryUrl>
 		<PackageProjectUrl>https://rakuvisa.com/</PackageProjectUrl>
-		<Version>1.0.8</Version>
-		<PackageId>MyanmarTools</PackageId>
+		<Version>1.0.9</Version>
+		<PackageId>MyanmarTools.NET</PackageId>
 		<Authors>RAKUVISA</Authors>
 		<Product>Myanmar Tools</Product>
+		<PackageReleaseNotes>Improved Probability formatting:
+
+Probability values (double) are now displayed and logged in a human-readable decimal format instead of scientific notation.
+
+Ensures more accurate visualization and easier debugging for very small probability values.</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
