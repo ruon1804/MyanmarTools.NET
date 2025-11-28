@@ -5,17 +5,18 @@
 		<Description>Myanmar Tools uses a machine learning model to give very accurate results when detecting Zawgyi versus Unicode. Detectors that use hand-coded rules for detection are susceptible to flagging content in other languages like Shan and Mon as Zawgyi when it is actually Unicode.</Description>
 		<Title>Myanmar Tools for .NET</Title>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<RepositoryUrl>https://github.com/nihongocom/rakuvisa</RepositoryUrl>
-		<PackageProjectUrl>https://rakuvisa.com/</PackageProjectUrl>
-		<Version>1.0.9</Version>
+		<RepositoryUrl>https://github.com/ruon1804/MyanmarTools.NET</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/ruon1804/MyanmarTools.NET</PackageProjectUrl>
+		<Version>1.0.1</Version>
 		<PackageId>MyanmarTools.NET</PackageId>
-		<Authors>RAKUVISA</Authors>
+		<Authors>LUONGPV</Authors>
 		<Product>Myanmar Tools</Product>
-		<PackageReleaseNotes>Improved Probability formatting:
-
-Probability values (double) are now displayed and logged in a human-readable decimal format instead of scientific notation.
-
-Ensures more accurate visualization and easier debugging for very small probability values.</PackageReleaseNotes>
+		<PackageReleaseNotes>Initial build with unnecessary code removed, keeping only the C# implementation
+Upgraded to .NET 8
+Embedded resource files into the package for easier usage
+Updated the Predict method to return values rounded to three decimal places for consistency and comparison</PackageReleaseNotes>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -34,5 +35,16 @@ Ensures more accurate visualization and easier debugging for very small probabil
 	  <EmbeddedResource Include="Resources\zawgyiUnicodeModel.dat">
 	    <CustomToolNamespace>MyanmarTools.Resources.zawgyiUnicodeModel.dat</CustomToolNamespace>
 	  </EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\LICENSE.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	  <None Include="..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
 	</ItemGroup>
 </Project>
