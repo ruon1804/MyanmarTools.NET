@@ -1,6 +1,6 @@
+using MyanmarTools.Utils;
 using System;
 using System.IO;
-using MyanmarTools.Utils;
 
 namespace MyanmarTools.Markov
 {
@@ -58,8 +58,8 @@ namespace MyanmarTools.Markov
         private static readonly short SPC_OFFSET = (short)(EXB_OFFSET + EXB_CP1 - EXB_CP0 + 1);
         private static readonly short END_OFFSET = (short)(SPC_OFFSET + SPC_CP1 - SPC_CP0 + 1);
 
-        BinaryMarkov Classifier;
-        int ssv;
+        private readonly BinaryMarkov Classifier;
+        private readonly int ssv;
 
         /**
        * SSV: An ID representing which Unicode code points to include in the model:
@@ -129,62 +129,60 @@ namespace MyanmarTools.Markov
         /// <exception cref="IOException">If there was a problem reading the data.</exception>
         public ZawgyiUnicodeMarkovModel(Stream Stream)
         {
-            using (var Reader = new BigEndianBinaryReader(Stream))
+            using var Reader = new BigEndianBinaryReader(Stream);
+
+            // Check magic number and serial version number
+            var BinaryTag = Reader.ReadInt64();
+
+            if (BinaryTag != BINARY_TAG)
             {
-                // Check magic number and serial version number
-                var BinaryTag =Reader.ReadInt64();
-
-                if (BinaryTag != BINARY_TAG)
-                {
-                    throw new IOException(
-                        String.Format(
-                            "Unexpected magic number; expected 0x{0:X} but got 0x{1:X}", BINARY_TAG, BinaryTag));
-                }
-
-                var BinaryVersion = Reader.ReadInt32();
-
-                if (BinaryVersion == 1)
-                {
-                    // Binary version 1 has no SSV field; SSV_STD_EXA_EXB_SPC is always used
-                    ssv = SSV_STD_EXA_EXB_SPC;
-                }
-                else if (BinaryVersion == 2)
-                {
-                    // Binary version 2 adds the SSV field
-                    ssv = Reader.ReadInt32();
-                }
-                else
-                {
-                    throw new IOException(
-                        String.Format(
-                            "Unexpected serial version number; expected 1 or 2 but got {0}",
-                            BinaryVersion));
-                }
-                if (ssv < 0 || ssv >= SSV_COUNT)
-                {
-                    throw new IOException(
-                        String.Format(
-                            "Unexpected value in ssv position; expected 0 or 1 but got {0}",
-                            ssv));
-                }
-
-                Classifier = new BinaryMarkov(Stream);
+                throw new IOException(
+                    String.Format(
+                        "Unexpected magic number; expected 0x{0:X} but got 0x{1:X}", BINARY_TAG, BinaryTag));
             }
 
+            var BinaryVersion = Reader.ReadInt32();
+
+            if (BinaryVersion == 1)
+            {
+                // Binary version 1 has no SSV field; SSV_STD_EXA_EXB_SPC is always used
+                ssv = SSV_STD_EXA_EXB_SPC;
+            }
+            else if (BinaryVersion == 2)
+            {
+                // Binary version 2 adds the SSV field
+                ssv = Reader.ReadInt32();
+            }
+            else
+            {
+                throw new IOException(
+                    String.Format(
+                        "Unexpected serial version number; expected 1 or 2 but got {0}",
+                        BinaryVersion));
+            }
+
+            if (ssv < 0 || ssv >= SSV_COUNT)
+            {
+                throw new IOException(
+                    String.Format(
+                        "Unexpected value in ssv position; expected 0 or 1 but got {0}",
+                        ssv));
+            }
+
+            Classifier = new BinaryMarkov(Stream);
         }
 
         /// <summary>
-        /// Runs the given input string on both internal Markov chains and computes the probability of the
-        /// string being unicode or zawgyi.
+        /// Runs the given input string through the classifier and returns the raw (unrounded)
+        /// probability that the input is Zawgyi.
         /// </summary>
         /// <param name="Input">The string to evaluate.</param>
-        /// <returns>The probability that the string is Zawgyi given that it is either Unicode or Zawgyi, or
-        /// -Infinity if there are no Myanmar range code points in the string.
+        /// <returns>The unrounded probability that the string is Zawgyi given that it is either Unicode or
+        /// Zawgyi, or <see cref="double.NegativeInfinity"/> if there are no Myanmar range code points.
         /// </returns>
-        public double Predict(String Input)
+        public double PredictRaw(String Input)
         {
             // Start at the base state
-            int prevCp = 0;
             int prevState = 0;
             double totalDelta = 0.0;
             bool seenTransition = false;
@@ -211,7 +209,6 @@ namespace MyanmarTools.Markov
                 }
 
                 offset += cp >= 0x10000 ? 2 : 1;
-                prevCp = cp;
                 prevState = currState;
 
             }
@@ -224,7 +221,26 @@ namespace MyanmarTools.Markov
                 return Double.NegativeInfinity;
             }
 
-            return Math.Round(1.0 / (1.0 + Math.Exp(totalDelta)), 3);
+            return 1.0 / (1.0 + Math.Exp(totalDelta));
+
+        }
+
+        /// <summary>
+        /// Runs the given input string through the classifier and returns a rounded probability
+        /// for backward compatibility.
+        /// </summary>
+        /// <param name="Input">The string to evaluate.</param>
+        /// <returns>The probability rounded to 3 decimal places, or <see cref="double.NegativeInfinity"/>
+        /// if there are no Myanmar range code points.</returns>
+        public double Predict(String Input)
+        {
+            var raw = PredictRaw(Input);
+            if (double.IsNegativeInfinity(raw))
+            {
+                return raw;
+            }
+
+            return Math.Round(raw, 3);
 
         }
     }

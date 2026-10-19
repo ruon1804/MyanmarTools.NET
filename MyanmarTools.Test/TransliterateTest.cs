@@ -1,11 +1,10 @@
-using Xunit;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Xunit;
 
 namespace MyanmarTools.Test
 {
-
     public class TransliterateTest
     {
         private ZawgyiConverter converter;
@@ -311,6 +310,7 @@ new string[]{  // #103 From case 189
 "\u106e","\u100d\u1039\u100d",  },
 };
         #endregion
+
         public TransliterateTest()
         {
             converter = new ZawgyiConverter();
@@ -406,14 +406,11 @@ new string[]{  // #103 From case 189
                                 Assert.Equal(converter.ZawgyiToUnicode(ZLine), GoldenLine);
                             }
 
-
                         }
                     }
                 }
             }
-
         }
-
 
         /**
           * Compatibility test for U->Z conversion using golden file.
@@ -439,14 +436,10 @@ new string[]{  // #103 From case 189
                                 var GoldenLine = GoldenReader.ReadLine();
                                 Assert.Equal(converter.NormalizeZawgyi(converter.UnicodeToZawgyi(ULine)), converter.NormalizeZawgyi(GoldenLine));
                             }
-
-
                         }
                     }
                 }
             }
-
         }
-
     }
 }

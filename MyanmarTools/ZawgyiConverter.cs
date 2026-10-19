@@ -4,7 +4,6 @@ namespace MyanmarTools
 {
     public class ZawgyiConverter
     {
-
         private TransliterateZ2U TransliterateZ2U;
         private TransliterateU2Z TransliterateU2Z;
         private TransliterateZNorm TransliterateZNorm;
@@ -30,7 +29,7 @@ namespace MyanmarTools
         public string UnicodeToZawgyi(string InString)
         {
             TransliterateU2Z ??= new TransliterateU2Z("U2Z");
-            return TransliterateU2Z!.Convert(InString);
+            return TransliterateU2Z.Convert(InString);
         }
 
         /// <summary>
@@ -42,7 +41,7 @@ namespace MyanmarTools
         public string NormalizeZawgyi(string InString)
         {
             TransliterateZNorm ??= new TransliterateZNorm("ZNorm");
-            return TransliterateZNorm!.Convert(InString);
+            return TransliterateZNorm.Convert(InString);
         }
     }
 }

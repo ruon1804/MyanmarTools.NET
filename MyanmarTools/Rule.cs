@@ -2,7 +2,9 @@ using System.Text.RegularExpressions;
 
 namespace MyanmarTools
 {
+    /// <summary>
     /// Class implementing a rule as part of a transliteration phase.
+    /// </summary>
     public class Rule
     {
         public string Substitution { get; private set; }
@@ -12,14 +14,12 @@ namespace MyanmarTools
         public string Info { get; private set; }
         public string ContextBefore { get; private set; }
         public string ContextAfter { get; private set; }
-        public Rule(string PatternString, string Substitution,bool MatchOnStart=false,int RevisitPosition=-1)
+        public Rule(string PatternString, string Substitution, bool MatchOnStart = false, int RevisitPosition = -1)
         {
-
             this.Pattern = new Regex($"^{PatternString}");
             this.Substitution = Substitution;
             this.MatchOnStart = MatchOnStart;
             this.RevisitPosition = RevisitPosition;
-
         }
 
         public Rule SetInfo(string RuleInfo)
@@ -50,6 +50,5 @@ namespace MyanmarTools
             ContextAfter = After;
             return this;
         }
-
     }
 }

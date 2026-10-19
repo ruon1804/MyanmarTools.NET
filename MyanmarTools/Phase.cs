@@ -21,8 +21,6 @@ namespace MyanmarTools
             var MidString = InString;
             var StartOfString = true;
 
-
-
             while (!string.IsNullOrEmpty(MidString))
             {
                 // Move through the string, matching / applying rules .
@@ -32,24 +30,21 @@ namespace MyanmarTools
                 {
                     if (!Rule.MatchOnStart || StartOfString)
                     {
-
                         var Match = Rule.Pattern.Match(MidString);
                         if (Match.Success)
                         {
-                             FoundRule = true;
-                             var Substitution = Match.Result(Rule.Substitution);
-                             if (Rule.RevisitPosition < 0)
-                             {
-                                 // Reset the new position to the end of the substitution.
-                                 OutString.Append(Substitution);
-                                 MidString = MidString.Substring(Match.Length);
-                             }
-                             else
-                             {
-                                 MidString = string.Concat(Substitution, MidString.Substring(Match.Length));
-                             }
-
-                            
+                            FoundRule = true;
+                            var Substitution = Match.Result(Rule.Substitution);
+                            if (Rule.RevisitPosition < 0)
+                            {
+                                // Reset the new position to the end of the substitution.
+                                OutString.Append(Substitution);
+                                MidString = MidString.Substring(Match.Length);
+                            }
+                            else
+                            {
+                                MidString = string.Concat(Substitution, MidString.Substring(Match.Length));
+                            }
                         }
                     }
                 }
@@ -60,7 +55,6 @@ namespace MyanmarTools
                     MidString = MidString.Substring(1);
                 }
                 StartOfString = false;
-
             }
             return OutString.ToString();
         }

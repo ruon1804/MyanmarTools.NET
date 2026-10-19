@@ -1,6 +1,6 @@
+using MyanmarTools.Utils;
 using System;
 using System.IO;
-using MyanmarTools.Utils;
 
 namespace MyanmarTools.Markov
 {
